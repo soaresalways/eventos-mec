@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventos e Mecânicos</title>
+
+<style>
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: white;
+}
+
+body {
+    background: url("fundo.gif") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* ===== TELA DE BLOQUEIO ===== */
+
+.lock-screen {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    background: url("lock.gif") center center no-repeat;
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    z-index: 9999;
+    overflow: hidden;
+    transition: opacity 0.8s ease;
+}
+
+.lock-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+}
+
+.lock-screen h2,
+.lock-screen input,
+.lock-screen button,
+.erro {
+    position: relative;
+    z-index: 2;
+}
+
+.lock-screen input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.erro {
+    color: red;
+    margin-top: 10px;
+}
+
+/* CONTEÚDO */
+
+h1 {
+    margin-top: 40px;
+    font-size: 28px;
+}
+
+.clique-foto {
+    font-size: 18px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.container img {
+    width: 300px;
+    max-width: 90%;
+    border-radius: 20px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.container img:hover {
+    transform: scale(1.1);
+}
+
+/* BOTÕES */
+
+.botoes {
+    margin-top: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #00ffcc;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background-color: #00ccaa;
+}
+
+/* BOTÃO ESPECIAL */
+
+.botao-especial {
+    background-color: #ff66cc;
+    color: white;
+}
+
+.botao-especial:hover {
+    background-color: #ff3399;
+}
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.conteudo {
+    background: #222;
+    padding: 30px;
+    border-radius: 15px;
+    width: 320px;
+    max-width: 90%;
+    animation: aparecer 0.4s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+@keyframes aparecer {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.fechar {
+    margin-top: 20px;
+    background-color: red;
+    color: white;
+}
+
+/* LISTA ANIMADA */
+
+.frase {
+    opacity: 0;
+    margin: 10px 0;
+    animation: aparecerFrase 0.6s forwards;
+}
+
+@keyframes aparecerFrase {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* GIF FLUTUANDO */
+
+.gif-canto {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    z-index: 20;
+    animation: flutuar 3s infinite ease-in-out;
+    transition: transform 0.3s;
+}
+
+.gif-canto:hover {
+    transform: scale(1.2);
+}
+
+@keyframes flutuar {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0px); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="lock-screen" id="lock">
+    <h2>Senha: Homem de cavanhaque é uma: (sem acentos)</h2>
+    <input type="password" id="senha" placeholder="Digite a palavra...">
+    <button onclick="verificarSenha()">Entrar</button>
+    <div class="erro" id="erro"></div>
+</div>
+
+<h1>Eventos adoram os mecanicos com todo o coração!! ❤️</h1>
+<div class="clique-foto">Clique na foto 👇</div>
+
+<div class="container">
+    <img src="imagem.png" onclick="abrirTela('foto')">
+    <p>Chega de desculpas!! 😤</p>
+</div>
+
+<div class="botoes">
+    <button onclick="abrirTela('sobre')">Eventos</button>
+    <button onclick="abrirTela('mecanicos')">Mecânicos</button>
+    <button onclick="abrirTela('wings')">Club das Wings</button>
+</div>
+
+<div class="botoes">
+    <button class="botao-especial" onclick="abrirTela('especial')">Especial</button>
+</div>
+
+<div id="modal" class="modal">
+    <div class="conteudo">
+        <div id="texto"></div>
+        <button class="fechar" onclick="fecharTela()">Fechar</button>
+    </div>
+</div>
+
+<img src="canto.gif" class="gif-canto">
+
+<script>
+
+function verificarSenha() {
+    const senha = document.getElementById("senha").value;
+    const erro = document.getElementById("erro");
+    const lock = document.getElementById("lock");
+
+    if (senha === "delicia") {
+        lock.style.opacity = "0";
+        setTimeout(() => {
+            lock.style.display = "none";
+        }, 800);
+    } else {
+        erro.innerText = "Palavra incorreta!";
+    }
+}
+
+document.getElementById("senha").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        verificarSenha();
+    }
+});
+
+function abrirTela(tipo) {
+
+    const texto = document.getElementById("texto");
+    const modal = document.getElementById("modal");
+    texto.innerHTML = "";
+
+    if (tipo === "sobre") {
+        texto.innerHTML = "<p>Eventos sempre dependem dos mecânicos para tudo funcionar perfeitamente...</p>";
+    }
+
+    if (tipo === "mecanicos") {
+        texto.innerHTML = "<p>Melhor sala da etec, fato.</p>";
+    }
+
+    if (tipo === "wings") {
+        texto.innerHTML = `
+            <h3>Club das Wings ✨</h3>
+            <img src="wings.jpg" style="width:100%; border-radius:15px; margin-top:10px;">
+        `;
+    }
+
+    if (tipo === "especial") {
+        texto.innerHTML = "<p>Você não é preta mas eu queria te encher de chicotada 🔥</p>";
+    }
+
+    if (tipo === "foto") {
+
+        const frases = [
+            "🙏 Senhor, repreende",
+            "😢 As palavras machucam",
+            "🫦 Homem de cavanhaque é uma delicia",
+            "🥲 Puts, ta tão parado esse Trajano",
+            "🤓 A matematica",
+            "⏳ A parada não é rapida, é lenta, muito lenta mas ela A CON TE CE",
+            "😔 Desculpa, nós erramos",
+            "🤔 O que é molesta? (duda)",
+            "🤬 EU NÃO ESTOU BRAVA COM VOCÊ",
+            "😤🔥 Chega de desculpas!!! (meu preferido hehe)"
+        ];
+
+        frases.forEach((frase, index) => {
+            const p = document.createElement("p");
+            p.classList.add("frase");
+            p.style.animationDelay = (index * 0.5) + "s";
+            p.innerText = frase;
+            texto.appendChild(p);
+        });
+    }
+
+    modal.style.display = "flex";
+}
+
+function fecharTela() {
+    document.getElementById("modal").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
